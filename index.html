@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perpetual Momentum | AI Consulting & 3D Visualization</title>
+    <meta name="description" content="Perpetual Momentum helps small businesses scale with AI automation and provides stunning 3D floor plan visualizations for apartment communities.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #05060f;
+            --bg-dark: #0a0d1a;
+            --bg-card: rgba(15, 20, 40, 0.85);
+            --accent-gold: #d4a853;
+            --accent-gold-dim: rgba(212, 168, 83, 0.3);
+            --accent-blue: #4a7cff;
+            --accent-blue-dim: rgba(74, 124, 255, 0.2);
+            --text-bright: #e8eaf0;
+            --text-mid: #8b92a8;
+            --text-dim: #5a6178;
+            --border: rgba(255, 255, 255, 0.06);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg-deep);
+            color: var(--text-bright);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Particle Canvas */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Ambient glow overlays */
+        .glow-orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .glow-orb-1 {
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(74, 124, 255, 0.08), transparent 70%);
+            top: -200px;
+            right: -100px;
+            animation: drift1 20s ease-in-out infinite;
+        }
+
+        .glow-orb-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(212, 168, 83, 0.06), transparent 70%);
+            bottom: -150px;
+            left: -100px;
+            animation: drift2 25s ease-in-out infinite;
+        }
+
+        .glow-orb-3 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(120, 60, 180, 0.05), transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: drift3 30s ease-in-out infinite;
+        }
+
+        @keyframes drift1 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(-80px, 60px); }
+        }
+        @keyframes drift2 {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(60px, -80px); }
+        }
+        @keyframes drift3 {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.3); }
+        }
+
+        /* Content wrapper */
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(5, 6, 15, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            z-index: 100;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-bright);
+            text-decoration: none;
+            letter-spacing: 0.5px;
+        }
+
+        .logo span {
+            color: var(--accent-gold);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-mid);
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-gold);
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 8rem 2rem 6rem;
+            position: relative;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 200px;
+            background: linear-gradient(to bottom, transparent, var(--bg-deep));
+            pointer-events: none;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.4rem 1.2rem;
+            border: 1px solid var(--accent-gold-dim);
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--accent-gold);
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: -1px;
+            margin-bottom: 1.5rem;
+            max-width: 800px;
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, var(--accent-gold), #f0d080);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            color: var(--text-mid);
+            max-width: 550px;
+            line-height: 1.8;
+            margin-bottom: 2.5rem;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            animation: fadeInUp 1s ease-out 0.8s both;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn {
+            padding: 0.85rem 2.2rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-gold), #c49640);
+            color: var(--bg-deep);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(212, 168, 83, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-bright);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent-gold);
+            color: var(--accent-gold);
+        }
+
+        /* Divider */
+        .section-divider {
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+            margin: 0 auto 2rem;
+        }
+
+        /* Services */
+        .services {
+            padding: 8rem 2rem;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 1rem;
+        }
+
+        .section-header p {
+            color: var(--text-mid);
+            font-size: 1.05rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .service-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 2.5rem;
+            border: 1px solid var(--border);
+            transition: all 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-gold), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent-gold-dim);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+        }
+
+        .service-card:hover::before {
+            opacity: 1;
+        }
+
+        .service-icon {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+            padding: 0.8rem;
+            background: rgba(212, 168, 83, 0.08);
+            border-radius: 10px;
+            border: 1px solid rgba(212, 168, 83, 0.12);
+        }
+
+        .service-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-bright);
+        }
+
+        .service-card p {
+            color: var(--text-mid);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .service-card ul {
+            list-style: none;
+            margin-top: 1.5rem;
+        }
+
+        .service-card ul li {
+            padding: 0.4rem 0;
+            color: var(--text-mid);
+            font-size: 0.9rem;
+        }
+
+        .service-card ul li::before {
+            content: "› ";
+            color: var(--accent-gold);
+            font-weight: 700;
+        }
+
+        /* Results */
+        .results {
+            padding: 6rem 2rem;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .result-item {
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+        .result-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-gold), #f0d080);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .result-label {
+            color: var(--text-mid);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        /* About */
+        .about {
+            padding: 8rem 2rem;
+        }
+
+        .about-content {
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .about-content p {
+            color: var(--text-mid);
+            font-size: 1.05rem;
+            line-height: 1.9;
+            margin-bottom: 1.5rem;
+        }
+
+        .credentials {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+            justify-content: center;
+            margin-top: 2.5rem;
+        }
+
+        .credential-tag {
+            background: rgba(212, 168, 83, 0.06);
+            border: 1px solid rgba(212, 168, 83, 0.15);
+            padding: 0.5rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--accent-gold);
+            letter-spacing: 0.5px;
+        }
+
+        /* Contact */
+        .contact {
+            padding: 8rem 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .contact-content {
+            max-width: 480px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .contact-content > p {
+            color: var(--text-mid);
+            font-size: 1.05rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            padding: 0.9rem 1.2rem;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: border-color 0.3s;
+            background: rgba(15, 20, 40, 0.6);
+            color: var(--text-bright);
+        }
+
+        .contact-form input::placeholder,
+        .contact-form textarea::placeholder {
+            color: var(--text-dim);
+        }
+
+        .contact-form input:focus,
+        .contact-form textarea:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 20px rgba(212, 168, 83, 0.1);
+        }
+
+        .contact-form textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .contact-email {
+            margin-top: 2rem;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        .contact-email a {
+            color: var(--accent-gold);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .contact-email a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            padding: 3rem 2rem;
+            text-align: center;
+            border-top: 1px solid var(--border);
+        }
+
+        footer p {
+            color: var(--text-dim);
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .hero { padding: 7rem 1.5rem 4rem; min-height: auto; }
+            .nav-links { display: none; }
+            .services-grid { grid-template-columns: 1fr; }
+            .results-grid { grid-template-columns: repeat(2, 1fr); }
+            .section-header h2 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Particle Background -->
+    <canvas id="particles"></canvas>
+
+    <!-- Ambient Glow -->
+    <div class="glow-orb glow-orb-1"></div>
+    <div class="glow-orb glow-orb-2"></div>
+    <div class="glow-orb glow-orb-3"></div>
+
+    <div class="content">
+
+        <!-- Navigation -->
+        <nav>
+            <a href="#" class="logo">Perpetual <span>Momentum</span></a>
+            <ul class="nav-links">
+                <li><a href="#services">Services</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+
+        <!-- Hero -->
+        <section class="hero">
+            <div class="hero-badge">AI · Automation · Visualization</div>
+            <h1>Technology that gives your business <span class="highlight">unstoppable momentum</span></h1>
+            <p>We help small businesses automate workflows with AI and bring apartment communities to life with stunning 3D floor plan visualizations.</p>
+            <div class="hero-cta">
+                <a href="#contact" class="btn btn-primary">Get Started</a>
+                <a href="#services" class="btn btn-secondary">See Services</a>
+            </div>
+        </section>
+
+        <!-- Services -->
+        <section class="services" id="services">
+            <div class="section-header">
+                <div class="section-divider"></div>
+                <h2>What We Do</h2>
+                <p>Two core services designed to move your business forward.</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">⚡</div>
+                    <h3>AI & Automation Consulting</h3>
+                    <p>We audit your operations and implement AI-powered solutions that eliminate manual work and scale your output — without scaling your headcount.</p>
+                    <ul>
+                        <li>Workflow automation & optimization</li>
+                        <li>AI tool implementation & training</li>
+                        <li>Custom software solutions</li>
+                        <li>Technology roadmap development</li>
+                        <li>Ongoing support & retainer options</li>
+                    </ul>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🏠</div>
+                    <h3>3D Floor Plan Visualization</h3>
+                    <p>Convert your 2D floor plans into photorealistic 3D renderings that help prospective residents visualize their future home — and increase your conversion rates.</p>
+                    <ul>
+                        <li>Detailed 3D floor plans with furniture & lighting</li>
+                        <li>Residential & student housing specialists</li>
+                        <li>Fast turnaround times</li>
+                        <li>Bulk pricing for full communities</li>
+                        <li>Multiple style options available</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results -->
+        <section class="results">
+            <div class="section-header">
+                <div class="section-divider"></div>
+                <h2>Proven Track Record</h2>
+            </div>
+            <div class="results-grid">
+                <div class="result-item">
+                    <div class="result-number">7+</div>
+                    <div class="result-label">Years in technology leadership</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-number">AI/ML</div>
+                    <div class="result-label">Implementation expertise</div>
+                </div>
+                <div class="result-item">
+                    <div class="result-number">IoT</div>
+                    <div class="result-label">Smart building integration</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About -->
+        <section class="about" id="about">
+            <div class="section-header">
+                <div class="section-divider"></div>
+                <h2>About</h2>
+            </div>
+            <div class="about-content">
+                <p>Perpetual Momentum was founded by Christopher Abraham, a mechanical engineer and technology leader with over 7 years of experience managing technology roadmaps for major organizations.</p>
+                <p>From developing medical applications to crafting sustainability roadmaps, integrating IoT devices in multifamily housing, and implementing AI/ML solutions at scale — we bring enterprise-grade expertise to small businesses ready to level up.</p>
+                <div class="credentials">
+                    <span class="credential-tag">Mechanical Engineering</span>
+                    <span class="credential-tag">AI & Machine Learning</span>
+                    <span class="credential-tag">Automation & Robotics</span>
+                    <span class="credential-tag">IoT Integration</span>
+                    <span class="credential-tag">3D Visualization</span>
+                    <span class="credential-tag">Project Management</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact -->
+        <section class="contact" id="contact">
+            <div class="section-header">
+                <div class="section-divider"></div>
+                <h2>Let's Talk</h2>
+            </div>
+            <div class="contact-content">
+                <p>Ready to give your business unstoppable momentum? Tell us about your project.</p>
+                <form class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+                    <input type="text" name="name" placeholder="Your Name" required>
+                    <input type="email" name="email" placeholder="Your Email" required>
+                    <input type="text" name="company" placeholder="Company Name">
+                    <textarea name="message" placeholder="Tell us about your project or what you need help with..." required></textarea>
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Send Message</button>
+                </form>
+                <p class="contact-email">Or email us directly at <a href="mailto:chris@vividviews.co">chris@vividviews.co</a></p>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <p>&copy; 2026 Perpetual Momentum. All rights reserved.</p>
+        </footer>
+
+    </div>
+
+    <!-- Particle System -->
+    <script>
+    (function() {
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        let w, h, particles = [];
+        const PARTICLE_COUNT = 180;
+
+        function resize() {
+            w = canvas.width = window.innerWidth;
+            h = canvas.height = document.documentElement.scrollHeight;
+        }
+
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * w;
+                this.y = Math.random() * h;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.3;
+                this.speedY = -(Math.random() * 0.5 + 0.1);
+                this.opacity = Math.random() * 0.6 + 0.1;
+                this.fadeSpeed = Math.random() * 0.003 + 0.001;
+                this.growing = Math.random() > 0.5;
+                // Color: mix of gold, blue, and white particles
+                const colorRoll = Math.random();
+                if (colorRoll < 0.4) {
+                    this.r = 212; this.g = 168; this.b = 83; // gold
+                } else if (colorRoll < 0.7) {
+                    this.r = 74; this.g = 124; this.b = 255; // blue
+                } else if (colorRoll < 0.85) {
+                    this.r = 160; this.g = 100; this.b = 220; // purple
+                } else {
+                    this.r = 200; this.g = 210; this.b = 230; // pale white
+                }
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.growing) {
+                    this.opacity += this.fadeSpeed;
+                    if (this.opacity >= 0.7) this.growing = false;
+                } else {
+                    this.opacity -= this.fadeSpeed;
+                    if (this.opacity <= 0) this.reset();
+                }
+
+                if (this.y < -10 || this.x < -10 || this.x > w + 10) this.reset();
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity})`;
+                ctx.fill();
+
+                // Glow
+                if (this.size > 1) {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size * 3, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(${this.r}, ${this.g}, ${this.b}, ${this.opacity * 0.1})`;
+                    ctx.fill();
+                }
+            }
+        }
+
+        function init() {
+            resize();
+            particles = [];
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, w, h);
+
+            // Draw connection lines between nearby particles
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 120) {
+                        const lineOpacity = (1 - dist / 120) * 0.08 * Math.min(particles[i].opacity, particles[j].opacity);
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(212, 168, 83, ${lineOpacity})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        window.addEventListener('resize', () => {
+            resize();
+        });
+
+        init();
+        animate();
+
+        // Recalculate canvas height on scroll (for full-page coverage)
+        let resizeTimer;
+        const observer = new ResizeObserver(() => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(resize, 200);
+        });
+        observer.observe(document.body);
+    })();
+    </script>
+
+</body>
+</html>
